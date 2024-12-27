@@ -52,7 +52,7 @@
   </div>
 </div>
 
-<div class="image-wrapper {{ layout }}">
+<div class="imageWrapper {{ layout }}">
   <div class="image-block">
     {% for block in section.blocks %}
       {% liquid
@@ -103,8 +103,7 @@
     }
 
     lbl.addEventListener('click', (l) => {
-        reset()
-
+        console.log('item clicked')
         const no = label.getAttribute('data-no')
 
         const image = findOneElement(section, `.js-image[data-no="${no}"]`)

@@ -3612,7 +3612,7 @@ details-disclosure > details {
     margin: u.rem-calc(spacing.$large) 0;
   }
 
-  .headerDesktop {
+  .header-desktop {
     display: none;
     @include mq.min(large) {
       display: block;
@@ -3636,60 +3636,30 @@ details-disclosure > details {
     grid-row: 3;
   }
 
-  .content:global(.images_right) {
-    @include mq.min(large) {
-      grid-column: 1;
-      grid-row: 1;
-    }
-  }
-
   .subtitle {
     margin-bottom: 10px;
   }
 
-  &_title {
-    @include typography.large_sans();
-    color: color.get(red);
-    @include mq.min(large) {
-      @include typography.xxlarge_sans();
-    }
-    & span {
-      @include typography.large_serif();
-      color: color.get(white);
-      @include mq.min(large) {
-        @include typography.xxlarge_serif();
-      }
+  .title {
+    color: red;
+    
+    .span {
+      color: white;
     }
   }
 
-  &_block {
+  .block {
     opacity: 0;
     height: 0;
     transition: opacity 0.5s ease-in-out;
-
-    &:global(.active) {
-      opacity: 1;
-      height: auto;
-    }
   }
 
-  &_blockTitle {
+  .blockTitle {
     text-transform: uppercase;
-    @include typography.regular_sans();
-    margin-bottom: u.rem-calc(spacing.$small);
-    @include mq.min(large) {
-      @include typography.medium_sans();
-    }
+    margin-bottom: 10px;
   }
 
-  &_blockText {
-    @include typography.small_serif();
-    @include mq.min(large) {
-      @include typography.regular_serif();
-    }
-  }
-
-  &_list {
+  .list {
     list-style: none;
     padding: 0;
     margin: 0;
@@ -3698,56 +3668,35 @@ details-disclosure > details {
     margin-bottom: u.rem-calc(spacing.$regular);
   }
 
-  &_label {
+  .label {
     text-transform: uppercase;
-    @include typography.regular_sans();
-    color: color.get(white);
+    color: white;
     background-color: transparent;
-    padding: u.rem-calc(spacing.$small) u.rem-calc(spacing.$regular);
     border-radius: 100;
     cursor: pointer;
-    border: u.rem-calc(1) solid color.get(white);
-
-    &:global(.active),
-    &:hover {
-      color: color.get(black);
-      background-color: color.get(white);
-    }
+  }
+  
+  .sub_title {
+    margin-bottom: 20px;
   }
 
-  &_imageWrapper {
+  .imageWrapper {
     width: 100%;
     aspect-ratio: 1;
     box-sizing: border-box;
     grid-column: 1;
     grid-row: 2;
-
-    &:global(.images_left) {
-      @include mq.min(large) {
-        grid-column: 1;
-        grid-row: 1;
-        padding-left: u.rem-calc(spacing.$xsmall);
-      }
-    }
-
-    &:global(.images_right) {
-      @include mq.min(large) {
-        grid-column: 2;
-        grid-row: 1;
-        padding-right: u.rem-calc(spacing.$xsmall);
-      }
-    }
   }
 
-  &_images {
+  .images {
     position: relative;
-    border-radius: u.rem-calc(8);
+    border-radius: 8px;
     overflow: hidden;
     width: 100%;
     aspect-ratio: 1;
   }
 
-  &_image {
+  .js-image {
     opacity: 0;
     display: block;
     width: 100%;
@@ -3757,17 +3706,13 @@ details-disclosure > details {
     left: 0;
     transition: opacity 0.5s ease-in-out;
 
-    & img {
+    img {
       width: 100%;
       height: 100%;
       position: absolute;
       top: 0;
       left: 0;
       object-fit: cover;
-    }
-
-    &:global(.active) {
-      opacity: 1;
     }
   }
 }
