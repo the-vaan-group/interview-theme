@@ -14,7 +14,7 @@
   {% endif %}
 </div>
 
-<div class="<% style TIB_content %> {{ layout }}">
+<div class="content {{ layout }}">
   <div class="header-desktop">
     {% if subtitle %}
       <p class="sub_title">{{ subtitle }}</p>
@@ -31,7 +31,7 @@
         {% assign label = block.settings.label %}
 
         <li>
-          <button data-no="{{ forloop.index }}" class="js-label <% style TIB_label %> {% if forloop.first %} active {% endif %}">{{ label }}</button>
+          <button data-no="{{ forloop.index }}" class="js-label label {% if forloop.first %} active {% endif %}">{{ label }}</button>
         </li>
       {% endfor %}
     </ul>
@@ -60,7 +60,18 @@
         assign image_desktop = block.settings.image_desktop
 
         capture image_sizes
-          render 'print-responsive-image', wide_image: image_desktop, narrow_image: image_mobile, breakpoint: 1024
+          {%- assign sizes = '320,480,640,800,960,1024,1280' | split: ',' -%}
+
+          {%- capture image_sizes -%}
+            {%- for size in sizes -%}
+              {%- assign size_request = size | round -%}
+              {{- image | image_url: width: size_request | append: ' ' | append: size | append: 'w' -}}
+              {%- unless forloop.last -%},{%- endunless -%}
+            {%- endfor -%}
+          {%- endcapture -%}
+
+          {%- assign image_sizes = image_sizes | strip_newlines | strip -%}
+          {{- image_sizes -}}
         endcapture
       %}
 
@@ -72,47 +83,45 @@
 </div>
 
 <script>
-const labels = findElements(section, '.js-label')
-  const images = findElements(section, '.js-image')
-  const blocks = findElements(section, '.js-block')
+  document.addEventListener("DOMContentLoaded", (event) => {
+    const lbl = document.querySelectorAll('.js-label') 
+    const images = document.querySelectorAll('.js-image') 
+    const blocks = document.querySelectorAll('.js-block') 
 
-  const reset = () => {
-    labels.forEach((l) => {
-      l.classList.remove('active')
-    })
+    const reset = () => {
+      lbl.forEach((l) => {
+        l.classList.remove('active')
+      })
 
-    images.forEach((i) => {
-      i.classList.remove('active')
-    })
+      images.forEach((i) => {
+        i.classList.remove('active')
+      })
 
-    blocks.forEach((b) => {
-      b.classList.remove('active')
-    })
-  }
-
-  namespace.addDelegatedEventListener(
-    section,
-    '.js-label',
-    'click',
-    (label) => {
-      reset()
-
-      const no = label.getAttribute('data-no')
-
-      const image = findOneElement(section, `.js-image[data-no="${no}"]`)
-      const block = findOneElement(section, `.js-block[data-no="${no}"]`)
-
-      block?.classList.add('active')
-      image?.classList.add('active')
-      label?.classList.add('active')
+      blocks.forEach((b) => {
+        b.classList.remove('active')
+      })
     }
-  )
+
+    lbl.addEventListener('click', (l) => {
+        reset()
+
+        const no = label.getAttribute('data-no')
+
+        const image = findOneElement(section, `.js-image[data-no="${no}"]`)
+        const block = findOneElement(section, `.js-block[data-no="${no}"]`)
+
+        block?.classList.add('active')
+        image?.classList.add('active')
+        label?.classList.add('active')
+      }
+    )
+  }
 </script>
 
 {% schema %}
   {
     "name": "Three images block",
-    "class": "three_image_block",
+    "class": "TIB",
     "tag": "section",
      "max_blocks": 3,
     "settings": [
