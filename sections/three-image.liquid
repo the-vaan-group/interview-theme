@@ -1,0 +1,191 @@
+{% liquid
+  assign subtitle = section.settings.subtitle
+  assign title = section.settings.title
+  assign layout = section.settings.layout
+%}
+
+<div class="headerMobile">
+  {% if subtitle %}
+    <p class="subtitle">{{ subtitle }}</p>
+  {% endif %}
+
+  {% if title %}
+    <h2 class="title">{{ title }}</h2>
+  {% endif %}
+</div>
+
+<div class="<% style TIB_content %> {{ layout }}">
+  <div class="header-desktop">
+    {% if subtitle %}
+      <p class="sub_title">{{ subtitle }}</p>
+    {% endif %}
+
+    {% if title %}
+      <h2 class="title">{{ title }}</h2>
+    {% endif %}
+  </div>
+
+  <div>
+    <ul class="list">
+      {% for block in section.blocks %}
+        {% assign label = block.settings.label %}
+
+        <li>
+          <button data-no="{{ forloop.index }}" class="js-label <% style TIB_label %> {% if forloop.first %} active {% endif %}">{{ label }}</button>
+        </li>
+      {% endfor %}
+    </ul>
+
+    {% for block in section.blocks %}
+      {% liquid
+        assign title = block.settings.title
+        assign text = block.settings.text
+      %}
+
+      <div data-no="{{ forloop.index }}" class="block {% if forloop.first %} active {% endif %} js-block">
+        <h3 class="title">{{ title }}</h3>
+        <div class="text">
+          {{ text }}
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+
+<div class="image-wrapper {{ layout }}">
+  <div class="image-block">
+    {% for block in section.blocks %}
+      {% liquid
+        assign image_mobile = block.settings.image_mobile
+        assign image_desktop = block.settings.image_desktop
+
+        capture image_sizes
+          render 'print-responsive-image', wide_image: image_desktop, narrow_image: image_mobile, breakpoint: 1024
+        endcapture
+      %}
+
+      <picture class="js-image  {% if forloop.first %} active {% endif %}" data-no="{{ forloop.index }}">
+        {{ image_sizes }}
+      </picture>
+    {% endfor %}
+  </div>
+</div>
+
+<script>
+const labels = findElements(section, '.js-label')
+  const images = findElements(section, '.js-image')
+  const blocks = findElements(section, '.js-block')
+
+  const reset = () => {
+    labels.forEach((l) => {
+      l.classList.remove('active')
+    })
+
+    images.forEach((i) => {
+      i.classList.remove('active')
+    })
+
+    blocks.forEach((b) => {
+      b.classList.remove('active')
+    })
+  }
+
+  namespace.addDelegatedEventListener(
+    section,
+    '.js-label',
+    'click',
+    (label) => {
+      reset()
+
+      const no = label.getAttribute('data-no')
+
+      const image = findOneElement(section, `.js-image[data-no="${no}"]`)
+      const block = findOneElement(section, `.js-block[data-no="${no}"]`)
+
+      block?.classList.add('active')
+      image?.classList.add('active')
+      label?.classList.add('active')
+    }
+  )
+</script>
+
+{% schema %}
+  {
+    "name": "Three images block",
+    "class": "three_image_block",
+    "tag": "section",
+     "max_blocks": 3,
+    "settings": [
+      {
+        "type": "text",
+        "id": "subtitle",
+        "label": "Subtitle",
+        "default": "Subtitle"
+      },
+      {
+        "type": "text",
+        "id": "title",
+        "label": "Title",
+        "default": "Title"
+      },
+      {
+        "type": "radio",
+        "id": "layout",
+        "label": "Layout",
+        "options": [
+          {
+            "value": "images_left",
+            "label": "Images left"
+          },
+          {
+            "value": "images_right",
+            "label": "Images right"
+          }
+        ],
+        "default": "images_right"
+      }
+    ],
+    "blocks": [
+      {
+        "type": "block",
+        "name": "Block",
+        "settings": [
+          {
+            "type": "text",
+            "id": "title",
+            "label": "Title",
+            "default": "Title"
+          },
+          {
+            "type": "richtext",
+            "id": "text",
+            "label": "Text",
+            "default": "<p>Description</p>"
+          },
+          {
+            "type": "text",
+            "id": "label",
+            "label": "Label",
+            "default": "Label"
+          },
+          {
+            "type": "image_picker",
+            "id": "image_mobile",
+            "label": "Image mobile",
+            "info": "Suggested aspect ratio is 4:6."
+          },
+          {
+            "type": "image_picker",
+            "id": "image_desktop",
+            "label": "Image desktop",
+            "info": "Suggested aspect ratio is 4:6."
+          }
+        ]
+      }
+    ],
+    "presets": [{
+      "name": "Three images block",
+      "settings": {}
+    }]
+  }
+{% endschema %}
