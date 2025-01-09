@@ -3595,3 +3595,124 @@ details-disclosure > details {
     transform: translateX(100%) scaleX(0);
   }
 }
+
+/* ADDED STYLES */
+
+.TIB {
+  box-sizing: border-box;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  margin: u.rem-calc(spacing.$regular) 0;
+  padding: 0 u.rem-calc(spacing.$regular);
+  gap: u.rem-calc(spacing.$regular);
+  @include mq.min(large) {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    padding: 0;
+    gap: 0;
+    margin: u.rem-calc(spacing.$large) 0;
+  }
+
+  .header-desktop {
+    display: none;
+    @include mq.min(large) {
+      display: block;
+    }
+  }
+
+  .headerMobile {
+    display: block;
+    grid-row: 1;
+    grid-column: 1;
+    @include mq.min(large) {
+      display: none;
+    }
+  }
+
+  .content {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    grid-column: 1;
+    grid-row: 3;
+  }
+
+  .subtitle {
+    margin-bottom: 10px;
+  }
+
+  .title {
+    color: red;
+    
+    .span {
+      color: white;
+    }
+  }
+
+  .block {
+    opacity: 0;
+    height: 0;
+    transition: opacity 0.5s ease-in-out;
+  }
+
+  .blockTitle {
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+
+  .list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    gap: u.rem-calc(spacing.$xxsmall);
+    margin-bottom: u.rem-calc(spacing.$regular);
+  }
+
+  .label {
+    text-transform: uppercase;
+    color: white;
+    background-color: transparent;
+    border-radius: 100;
+    cursor: pointer;
+  }
+  
+  .sub_title {
+    margin-bottom: 20px;
+  }
+
+  .imageWrapper {
+    width: 100%;
+    aspect-ratio: 1;
+    box-sizing: border-box;
+    grid-column: 1;
+    grid-row: 2;
+  }
+
+  .images {
+    position: relative;
+    border-radius: 8px;
+    overflow: hidden;
+    width: 100%;
+    aspect-ratio: 1;
+  }
+
+  .js-image {
+    opacity: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    transition: opacity 0.5s ease-in-out;
+
+    img {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+      object-fit: cover;
+    }
+  }
+}
